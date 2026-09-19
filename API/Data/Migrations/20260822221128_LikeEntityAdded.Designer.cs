@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260822221128_LikeEntityAdded")]
+    partial class LikeEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -87,21 +90,6 @@ namespace API.Data.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("API.Entities.MemberLike", b =>
-                {
-                    b.Property<string>("SourceMemberId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TargetMemberId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("SourceMemberId", "TargetMemberId");
-
-                    b.HasIndex("TargetMemberId");
-
-                    b.ToTable("Likes");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.Property<int>("Id")
@@ -137,25 +125,6 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Entities.MemberLike", b =>
-                {
-                    b.HasOne("API.Entities.Member", "SourceMember")
-                        .WithMany("LikedMembers")
-                        .HasForeignKey("SourceMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Member", "TargetMember")
-                        .WithMany("LikedByMembers")
-                        .HasForeignKey("TargetMemberId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("SourceMember");
-
-                    b.Navigation("TargetMember");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.HasOne("API.Entities.Member", "Member")
@@ -175,10 +144,6 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Member", b =>
                 {
-                    b.Navigation("LikedByMembers");
-
-                    b.Navigation("LikedMembers");
-
                     b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
